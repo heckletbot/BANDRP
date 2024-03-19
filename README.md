@@ -53,9 +53,9 @@ ECFP.pkl, ESPF.pkl, PSFP.pkl: All molecular fingerprints of the drug were calcul
 
 **config.py**: This function is used to control the hyperparameters of BANDRP.
 
-**drug_feature.py**: This function is used to calculate the molecular fingerprint of drugs. It input the SMILES strings of drugs and output the molecular fingerprint of drugs.
+**drug_fingerprint.py**: This function is used to calculate the molecular fingerprint of drugs. It input the SMILES strings of drugs and output the molecular fingerprint of drugs.
 
-**GSVA.r**: This function is used to calculate pathway enrichment scores for cancer cell lines. It inputs gene expression data of cancer cell lines and outputs pathway enrichment scores of cancer cell lines.
+**cell_process.r**: This function is used to calculate pathway enrichment scores for cancer cell lines. It inputs gene expression data of cancer cell lines and outputs pathway enrichment scores of cancer cell lines.
 
 **data_load.py**: This function is used to load the data of cancer cell lines, drugs and IC50 values.
 
@@ -68,7 +68,7 @@ ECFP.pkl, ESPF.pkl, PSFP.pkl: All molecular fingerprints of the drug were calcul
 
 
 # Require input files
-You should prepare gene expression, genomic mutation, DNA methylation, and Pathway enrichment scores for cancer cell lines, ECFP, ESPF, and PSFP for drugs, and IC50 values between cancer cell lines and drugs.
+You should prepare gene expression, genomic mutation, DNA methylation, and Pathway enrichment scores for cancer cell lines, ECFP, ESPF, and PSFP for drugs, and IC50 values between cancer cell lines and drugs. You can calculate pathway enrichment scores through **cell_process.r** and calculate molecular fingerprints of drugs through **drug_fingerprint.py**.
 
 
 
@@ -78,6 +78,8 @@ Before running the model, you need to set hyperparameters in **config.py**, incl
 rootpath: All code and input data should be placed in the folder of this path. (The data folder we uploaded contains all the required data.)
 
 savedir: Define the path to save the model.
+
+cuda_id: Select the GPU to use, otherwise the cpu will be used.
 
 epoch: Define the maximum number of epochs.
 
