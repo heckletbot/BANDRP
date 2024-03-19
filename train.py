@@ -70,7 +70,7 @@ print("load %s drugs and %s cell lines. total %s pairs" % (len(drug_id), len(dep
 device = torch.device('cuda:%s' % cfg['model']['cuda_id'] if torch.cuda.is_available() else "cpu")
 
 # split train and test sets
-train_set, test_set, val_set = process5fold2(drug_feature, mut_feature, exp_feature, methy_feature, pathway_feature,
+train_set, test_set, val_set = data_process(drug_feature, mut_feature, exp_feature, methy_feature, pathway_feature,
                                              pair,
                                              depmap_id, drug_id)
 # create model
