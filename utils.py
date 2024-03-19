@@ -1,7 +1,8 @@
+import random
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import random
 from prettytable import PrettyTable
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import mean_absolute_error, r2_score
@@ -18,6 +19,7 @@ def set_seed(seed):
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.deterministic = True
     return
+
 
 def eval_predict(y_label, y_pred):
     # MAE MSE RMSE R^2
@@ -39,7 +41,7 @@ def save_ouput(train_loss, test_loss, best_model_eval, savedir, fold):
     savedir_ = (savedir + '/fold%s') % (fold)
     np.save(savedir_ + 'train_loss.npy', train_loss)
     np.save(savedir_ + 'test_loss.npy', test_loss)
-    record_file = savedir+'/best_model.txt'
+    record_file = savedir + '/best_model.txt'
     with open(record_file, 'a') as f:
         f.write(("\nfold:%s \n" % (fold)))
         f.write(str(best_model_eval))
@@ -55,11 +57,11 @@ def draw_loss_curve(train_loss, test_loss, savedir):
     plt.xlabel('epoches')
     plt.title('Model loss')
     plt.show()
-    plt.savefig(savedir + 'loss.png',  # ⽂件名：png、jpg、pdf
-                dpi=100,  # 保存图⽚像素密度
-                facecolor='violet',  # 视图与边界之间颜⾊设置
-                edgecolor='lightgreen',  # 视图边界颜⾊设置
-                bbox_inches='tight')  # 保存图⽚完整
+    plt.savefig(savedir + 'loss.png',
+                dpi=100,
+                facecolor='violet',
+                edgecolor='lightgreen',
+                bbox_inches='tight')
     return
 
 

@@ -1,11 +1,7 @@
-import math
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.weight_norm import weight_norm
-
-
 
 from BAN import BANLayer
 
@@ -19,10 +15,12 @@ class CDR(nn.Module):
         mlp_in_dim = config['mlp']['mlp_in_dim']
         mlp_hidden_dim = config['mlp']['mlp_hidden_dim']
         self.drug_embedding = DrugEmbedding(drug_out_dim, use_morgan=True, use_espf=True, use_pubchem=True)
-        self.cell_embedding = CellEmbedding(cell_exp_dim, cell_mut_dim, cell_meth_dim, cell_path_dim, cell_out_dim, use_exp=True,
+        self.cell_embedding = CellEmbedding(cell_exp_dim, cell_mut_dim, cell_meth_dim, cell_path_dim, cell_out_dim,
+                                            use_exp=True,
                                             use_mut=True, use_meth=True, use_path=True)
         self.ban = weight_norm(
-            BANLayer(v_dim=drug_out_dim, q_dim=cell_out_dim, h_dim=mlp_in_dim, h_out=ban_heads),
+            BANLayer(v_dim=drug_out_dim, q_dim=cell_out_dim, h_dim=mlp_in_dim, h_out=ban_heads,
+                     dropout=config['ban']['dropout_rate']),
             name='h_mat', dim=None)
         self.mlp = MLP(mlp_in_dim, mlp_hidden_dim, out_dim=1)
 
@@ -48,7 +46,7 @@ class DrugEmbedding(nn.Module):
             nn.Linear(1024, out_dim)
         ]
         self.morgan_fp = nn.Sequential(*morgan_fp_layers)
-    
+
         # espf finger print
         espf_fp_layers = [
             nn.Linear(2586, 1024),
@@ -65,7 +63,7 @@ class DrugEmbedding(nn.Module):
         ]
         self.pubchem_fp = nn.Sequential(*pubchem_fp_layers)
 
-    def forward(self,finger_print):
+    def forward(self, finger_print):
         x_drug = []
 
         if self.use_morgan:
@@ -80,12 +78,13 @@ class DrugEmbedding(nn.Module):
             puchem_f = self.pubchem_fp(finger_print[2])
             x_drug.append(puchem_f)
 
-        out = torch.stack(x_drug,dim=1)
+        out = torch.stack(x_drug, dim=1)
         return out
 
 
 class CellEmbedding(nn.Module):
-    def __init__(self, exp_in_dim, mut_in_dim, meth_in_dim, path_in_dim, out_dim, use_exp=True, use_mut=True, use_meth=True,
+    def __init__(self, exp_in_dim, mut_in_dim, meth_in_dim, path_in_dim, out_dim, use_exp=True, use_mut=True,
+                 use_meth=True,
                  use_path=True):
         super(CellEmbedding, self).__init__()
         self.use_exp = use_exp
@@ -99,9 +98,9 @@ class CellEmbedding(nn.Module):
         self.gexp_fc2 = nn.Linear(256, out_dim)
 
         # mut_layer
-        self.mut_fc1= nn.Linear(mut_in_dim, 256)
-        self.mut_bn= nn.BatchNorm1d(256)
-        self.mut_fc2= nn.Linear(256, out_dim)
+        self.mut_fc1 = nn.Linear(mut_in_dim, 256)
+        self.mut_bn = nn.BatchNorm1d(256)
+        self.mut_fc2 = nn.Linear(256, out_dim)
 
         # methy_layer
         self.methylation_fc1 = nn.Linear(meth_in_dim, 256)
@@ -113,8 +112,6 @@ class CellEmbedding(nn.Module):
         self.pathway_bn = nn.BatchNorm1d(256)
         self.pathway_fc2 = nn.Linear(256, out_dim)
 
-
-
     def forward(self, expression_data, mutation_data, methylation_data, pathway_data):
         x_cell = []
         #  expression representation
@@ -123,7 +120,7 @@ class CellEmbedding(nn.Module):
             x_exp = F.relu(self.gexp_bn(x_exp))
             x_exp = F.relu(self.gexp_fc2(x_exp))
             x_cell.append(x_exp)
-        
+
         # mutation representation
         if self.use_mut:
             x_mut = self.mut_fc1(mutation_data)
@@ -145,7 +142,7 @@ class CellEmbedding(nn.Module):
             x_path = F.relu(self.pathway_fc2(x_path))
             x_cell.append(x_path)
 
-        x_cell = torch.stack(x_cell,dim=1)
+        x_cell = torch.stack(x_cell, dim=1)
         return x_cell
 
 
@@ -169,5 +166,3 @@ class MLP(nn.Module):
         x = self.hidden(x)
         x = self.fc2(x)
         return x
-
-
