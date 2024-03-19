@@ -1,6 +1,6 @@
 # BANDRP
 An end-to-end deep learning model based on multiple omics data of cancer cell lines and multiple molecular fingerprints of drugs for anti-cancer drug prediction, named BANDRP. 
-
+https://raw.githubusercontent.com/heckletbot/BANDRP/main/framework.svg?sanitize=true
 
 
 # Requirements
