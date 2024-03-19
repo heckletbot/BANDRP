@@ -60,9 +60,6 @@ class BANLayer(nn.Module):
 
 
 class FCNet(nn.Module):
-    """Simple class for non-linear fully connect network
-    Modified from https://github.com/jnhwkim/ban-vqa/blob/master/fc.py
-    """
 
     def __init__(self, dims, act='ReLU', dropout=0):
         super(FCNet, self).__init__()
@@ -89,9 +86,6 @@ class FCNet(nn.Module):
 
 
 class BCNet(nn.Module):
-    """Simple class for non-linear bilinear connect network
-    Modified from https://github.com/jnhwkim/ban-vqa/blob/master/bc.py
-    """
 
     def __init__(self, v_dim, q_dim, h_dim, h_out, act='ReLU', dropout=[.2, .5], k=3):
         super(BCNet, self).__init__()
