@@ -53,7 +53,7 @@ def draw_loss_curve(train_loss, test_loss, savedir):
     plt.clf()
     plt.plot(np.arange(len(train_loss)), train_loss, label="train loss")
     plt.plot(np.arange(len(test_loss)), test_loss, label="test loss")
-    plt.legend()  # 显示图例
+    plt.legend()  
     plt.xlabel('epoches')
     plt.title('Model loss')
     plt.show()
