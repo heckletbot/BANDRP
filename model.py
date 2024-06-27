@@ -6,9 +6,9 @@ from torch.nn.utils.weight_norm import weight_norm
 from BAN import BANLayer
 
 
-class CDR(nn.Module):
+class BANDRP(nn.Module):
     def __init__(self, cell_exp_dim, cell_mut_dim, cell_meth_dim, cell_path_dim, **config):
-        super(CDR, self).__init__()
+        super(BANDRP, self).__init__()
         drug_out_dim = config['drug']['drug_out_dim']
         cell_out_dim = config['cell']['cell_out_dim']
         ban_heads = config['ban']['ban_heads']
