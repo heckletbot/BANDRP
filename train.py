@@ -74,7 +74,7 @@ train_set, test_set, val_set = data_process(drug_feature, mut_feature, exp_featu
                                              pair,
                                              depmap_id, drug_id)
 # create model
-model = CDR(cell_exp_dim=exp_feature.shape[-1], cell_mut_dim=mut_feature.shape[-1],
+model = BANDRP(cell_exp_dim=exp_feature.shape[-1], cell_mut_dim=mut_feature.shape[-1],
             cell_meth_dim=methy_feature.shape[-1], cell_path_dim=pathway_feature.shape[-1], **cfg).to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=cfg['model']['lr'], weight_decay=cfg['model']['weight_decay'])
@@ -103,7 +103,7 @@ for epoch in range(cfg['model']['epoch']):
 save_ouput(train_loss, test_loss, best_eval, cfg['path']['savedir'], 0)
 draw_loss_curve(train_loss, test_loss, (cfg['path']['savedir'] + '/loss_curve.png'))
 # test
-model = CDR(cell_exp_dim=exp_feature.shape[-1], cell_mut_dim=mut_feature.shape[-1],
+model = BANDRP(cell_exp_dim=exp_feature.shape[-1], cell_mut_dim=mut_feature.shape[-1],
             cell_meth_dim=methy_feature.shape[-1], cell_path_dim=pathway_feature.shape[-1], **cfg).to(device)
 model.load_state_dict(torch.load((cfg['path']['savedir'] + '/model.pt')))
 epoch_test_loss, mse, rmse, mae, r2, pearson, pearson_p_value, spearman, spearman_p_value = test(model, test_set,
