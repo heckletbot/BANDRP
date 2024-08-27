@@ -37,13 +37,14 @@ def eval_predict(y_label, y_pred):
     return mse, rmse, mae, r2, pearson, pearson_p_value, spearman, spearman_p_value
 
 
-def save_ouput(train_loss, test_loss, best_model_eval, savedir, fold):
-    savedir_ = (savedir + '/fold%s') % (fold)
-    np.save(savedir_ + 'train_loss.npy', train_loss)
-    np.save(savedir_ + 'test_loss.npy', test_loss)
-    record_file = savedir + '/best_model.txt'
+def save_ouput(train_loss, test_loss, best_model_eval, savedir, settype):
+    if settype == "val":
+        savedir_ = (savedir + '/fold%s') % (settype)
+        np.save(savedir_ + 'train_loss.npy', train_loss)
+        np.save(savedir_ + 'test_loss.npy', test_loss)
+    record_file = savedir+'/best_model.txt'
     with open(record_file, 'a') as f:
-        f.write(("\nfold:%s \n" % (fold)))
+        f.write(("\ndataset:%s \n" % (settype)))
         f.write(str(best_model_eval))
         f.close()
     return

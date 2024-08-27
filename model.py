@@ -16,12 +16,10 @@ class BANDRP(nn.Module):
         mlp_hidden_dim = config['mlp']['mlp_hidden_dim']
         self.drug_embedding = DrugEmbedding(drug_out_dim, use_morgan=True, use_espf=True, use_pubchem=True)
         self.cell_embedding = CellEmbedding(cell_exp_dim, cell_mut_dim, cell_meth_dim, cell_path_dim, cell_out_dim,
-                                            use_exp=True,
-                                            use_mut=True, use_meth=True, use_path=True)
+                                            use_exp=True, use_mut=True, use_meth=True, use_path=True)
         self.ban = weight_norm(
             BANLayer(v_dim=drug_out_dim, q_dim=cell_out_dim, h_dim=mlp_in_dim, h_out=ban_heads,
-                     dropout=config['ban']['dropout_rate']),
-            name='h_mat', dim=None)
+                     dropout=config['ban']['dropout_rate']), name='h_mat', dim=None)
         self.mlp = MLP(mlp_in_dim, mlp_hidden_dim, out_dim=1)
 
     def forward(self, drug_data, cell_data):
